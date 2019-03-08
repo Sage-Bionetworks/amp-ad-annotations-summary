@@ -24,8 +24,11 @@ synLogin()
 ```{r get-all-ampad, echo = FALSE, results = "hide", cache = TRUE}
 ## Query file view of all individual studies + rnaseq reprocessing and rnaseq
 ## sample swap
-dat <- synTableQuery("select * from syn18396001")
-dat <- as.data.frame(dat)
+dat_fv <- synTableQuery("select * from syn18396001")
+dat_full <- as.data.frame(dat_fv)
+
+## Only take publicly released data
+dat <- filter(dat_full, benefactorId == "syn2580853")
 
 ## Non-annotation columns
 fv_cols <- c(
@@ -58,10 +61,10 @@ n_unique <- dat %>%
   nrow()
 ```
 
-Across all individual studies, plus the RNA-Seq reprocessing study and 
+Across all public individual studies, plus the RNA-Seq reprocessing study and
 RNA-Seq sample swap study there are:
 
-* **`r n_files`** total files
+* **`r n_files`** files
 * **`r n_unique`** unique annotation combinations
 
 `r round((n_unique / n_files) * 100)`% of files are uniquely annotated.
