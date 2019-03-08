@@ -69,6 +69,27 @@ RNA-Seq sample swap study there are:
 
 `r round((n_unique / n_files) * 100)`% of files are uniquely annotated.
 
+--
+
+The AD Cross Species study has many files and lacks the `specimenID` annotation,
+so most of these files are not uniquely annotated. Excluding AD Cross Species, we have:
+
+```{r count-distinct-without-ad-cross-species, echo = FALSE}
+dat_except_ad_cross <- dat %>%
+  filter(!study %in% c("AD_CrossSpecies", "AD_CrossSpecies "))
+
+n_unique_minus_ad_cross <- dat_except_ad_cross %>%
+  select(!!annot_cols) %>%
+  distinct() %>%
+  nrow()
+```
+
+* **`r nrow(dat_except_ad_cross)`** files
+* **`r n_unique_minus_ad_cross`** unique annotation combinations
+
+`r round((n_unique_minus_ad_cross / nrow(dat_except_ad_cross)) * 100)`% of files
+are uniquely annotated.
+
 ---
 
 # RNA Seq Reprocessing
