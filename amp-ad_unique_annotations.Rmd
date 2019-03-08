@@ -1,0 +1,118 @@
+---
+title: "AMP-AD Annotations"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default-fonts, default, "style.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include = FALSE, results = "hide", message = FALSE}
+options(htmltools.dir.version = FALSE)
+library("synapser")
+library("tidyverse")
+synLogin()
+```
+
+# Unique annotations in AMP-AD
+
+```{r get-all-ampad, echo = FALSE, results = "hide", cache = TRUE}
+## Query file view of all individual studies + rnaseq reprocessing and rnaseq
+## sample swap
+dat <- synTableQuery("select * from syn18396001")
+dat <- as.data.frame(dat)
+
+## Non-annotation columns
+fv_cols <- c(
+  "ROW_ID",
+  "ROW_VERSION",
+  "ROW_ETAG",
+  "id",
+  "name",
+  "createdOn",
+  "createdBy",
+  "etag",
+  "type",
+  "currentVersion",
+  "parentId",
+  "benefactorId",
+  "projectId",
+  "modifiedOn",
+  "modifiedBy",
+  "dataFileHandleId",
+  "concreteType"
+)
+
+annot_cols <- setdiff(names(dat), fv_cols)
+
+## How many files? How many unique annotations?
+n_files <- nrow(dat)
+n_unique <- dat %>%
+  select(!!annot_cols) %>%
+  distinct() %>%
+  nrow()
+```
+
+Across all individual studies, plus the RNA-Seq reprocessing study and 
+RNA-Seq sample swap study there are:
+
+* **`r n_files`** total files
+* **`r n_unique`** unique annotation combinations
+
+`r round((n_unique / n_files) * 100)`% of files are uniquely annotated.
+
+---
+
+# RNA Seq Reprocessing
+
+```{r reprocess, echo = FALSE, results = "hide", message = FALSE, cache = TRUE}
+reprocess <- dat %>%
+  filter(study %in% c("rnaSeqReprocessing", "rnaSeqReprocessing "))
+
+n_files_reprocess <- nrow(reprocess)
+n_unique_reprocess <- reprocess %>%
+  select(!!annot_cols) %>%
+  distinct() %>%
+  nrow()
+```
+
+The RNA Seq reprocessing study has `r n_files_reprocess` files with 
+`r n_unique_reprocess` unique annotation combinations. Below are the groups of
+files with repeated annotations:
+
+```{r reprocess-duplicated, echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE}
+reprocess_duplicated_annots <- reprocess %>%
+  group_by_at(annot_cols) %>%
+  summarize(n = n(), synIDs = list(id)) %>%
+  filter(n > 1) %>%
+  arrange(desc(n))
+
+reprocess_grouped_files <- reprocess_duplicated_annots %>%
+  ungroup() %>%
+  pmap_dfr( 
+    function(synIDs, ...) {
+      filenames <- map_chr(synIDs, function(y) {
+        file <- synGet(y, downloadFile = FALSE)
+        file$properties$name
+      })
+      filenames <- paste(filenames, collapse = ", ")
+      bind_cols(..., tibble(files = filenames))
+    }
+  ) %>%
+  select(n, files)
+
+DT::datatable(
+  reprocess_grouped_files,
+  fillContainer = FALSE,
+  rownames = FALSE,
+  options = list(pageLength = 3)
+)
+```
+
+
+
+
