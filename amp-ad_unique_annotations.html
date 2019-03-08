@@ -51,8 +51,59 @@ The RNA Seq reprocessing study has 12328 files with
 12298 unique annotation combinations. Below are the groups of
 files with repeated annotations:
 
-<div id="htmlwidget-0dafabf1a8a4fefee438" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0dafabf1a8a4fefee438">{"x":{"filter":"none","fillContainer":false,"data":[[7,5,5,5,4,2,2,2,2,2,2,2,2,2],["run_star_mayo.sh, run_star_mssm.sh, run_star_rosmap.sh, run_picard.sh, run_sailfish_mayo.sh, run_sailfish_mssm.sh, run_sailfish_rosmap.sh","Mayo_CBE_all_counts_matrix.txt.gz, Mayo_CBE_all_quant_length-matrix.txt.gz, Mayo_CBE_all_quant_variance-matrix.txt.gz, Mayo_CBE_all_quant_counts-matrix.txt.gz, Mayo_CBE_all_quant_abundance-matrix.txt.gz","Mayo_TCX_all_counts_matrix.txt.gz, Mayo_TCX_all_quant_variance-matrix.txt.gz, Mayo_TCX_all_quant_counts-matrix.txt.gz, Mayo_TCX_all_quant_length-matrix.txt.gz, Mayo_TCX_all_quant_abundance-matrix.txt.gz","ROSMAP_all_counts_matrix.txt.gz, ROSMAP_all_quant_counts-matrix.txt.gz, ROSMAP_all_quant_length-matrix.txt.gz, ROSMAP_all_quant_variance-matrix.txt.gz, ROSMAP_all_quant_abundance-matrix.txt.gz","MSSM_all_quant_abundance-matrix.txt.gz, MSSM_all_quant_length-matrix.txt.gz, MSSM_all_quant_counts-matrix.txt.gz, MSSM_all_quant_variance-matrix.txt.gz","150_120419_0_mergedAligned.out.bam, 150_120419Aligned.out.bam","150_120419_picard.CombinedMetrics.csv, 150_120419_0_merged_picard.CombinedMetrics.csv","150_120419.r1.fastq.gz, 150_120419_0_merged.r1.fastq.gz","150_120419_0_merged.r2.fastq.gz, 150_120419.r2.fastq.gz","150_120419_0_mergedReadsPerGene.out.tab, 150_120419ReadsPerGene.out.tab","150_120419_sailfish_out.tar.gz, 150_120419_0_merged_sailfish_out.tar.gz","gencode.v24.primary_assembly.rRNA.interval_list, gencode.v24.primary_assembly.refFlat.txt","gencode.v24.metadata.HGNC.gz, gencode.v24.annotation.gtf.gz","combine_counts_study.R, combine_metrics_study.R"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>files<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":3,"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[3,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+
+<div id="htmlwidget-f11645418f23b5ce5e54" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f11645418f23b5ce5e54">{"x":{"filter":"none","fillContainer":false,"data":[[7,5,5,5,4,2,2,2,2,2,2,2,2,2],["run_star_mayo.sh, run_star_mssm.sh, run_star_rosmap.sh, run_picard.sh, run_sailfish_mayo.sh, run_sailfish_mssm.sh, run_sailfish_rosmap.sh","Mayo_CBE_all_counts_matrix.txt.gz, Mayo_CBE_all_quant_length-matrix.txt.gz, Mayo_CBE_all_quant_variance-matrix.txt.gz, Mayo_CBE_all_quant_counts-matrix.txt.gz, Mayo_CBE_all_quant_abundance-matrix.txt.gz","Mayo_TCX_all_counts_matrix.txt.gz, Mayo_TCX_all_quant_variance-matrix.txt.gz, Mayo_TCX_all_quant_counts-matrix.txt.gz, Mayo_TCX_all_quant_length-matrix.txt.gz, Mayo_TCX_all_quant_abundance-matrix.txt.gz","ROSMAP_all_counts_matrix.txt.gz, ROSMAP_all_quant_counts-matrix.txt.gz, ROSMAP_all_quant_length-matrix.txt.gz, ROSMAP_all_quant_variance-matrix.txt.gz, ROSMAP_all_quant_abundance-matrix.txt.gz","MSSM_all_quant_abundance-matrix.txt.gz, MSSM_all_quant_length-matrix.txt.gz, MSSM_all_quant_counts-matrix.txt.gz, MSSM_all_quant_variance-matrix.txt.gz","150_120419_0_mergedAligned.out.bam, 150_120419Aligned.out.bam","150_120419_picard.CombinedMetrics.csv, 150_120419_0_merged_picard.CombinedMetrics.csv","150_120419.r1.fastq.gz, 150_120419_0_merged.r1.fastq.gz","150_120419_0_merged.r2.fastq.gz, 150_120419.r2.fastq.gz","150_120419_0_mergedReadsPerGene.out.tab, 150_120419ReadsPerGene.out.tab","150_120419_sailfish_out.tar.gz, 150_120419_0_merged_sailfish_out.tar.gz","gencode.v24.primary_assembly.rRNA.interval_list, gencode.v24.primary_assembly.refFlat.txt","gencode.v24.metadata.HGNC.gz, gencode.v24.annotation.gtf.gz","combine_counts_study.R, combine_metrics_study.R"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>files<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":3,"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[3,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+# Some other issues
+
+- Inconsistent annotation values, e.g. spaces at the end:
+
+
+```
+## [1] "DroNc-Seq "          "MayoRNAseq "         "ADMC_ADNI2-GO "     
+## [4] "rnaSeqReprocessing " "AD_CrossSpecies "
+```
+
+---
+
+# Some other issues
+
+* Invalid annotation keys
+
+
+```
+##  [1] "RIN"                           "Read"                         
+##  [3] "Status"                        "annotation1"                  
+##  [5] "annotation2"                   "assaySubType"                 
+##  [7] "dataContact"                   "dataSubType"                  
+##  [9] "disease"                       "display"                      
+## [11] "drosophilaModel"               "fileType"                     
+## [13] "genomeBuild"                   "imputationReference"          
+## [15] "individualIdColumn"            "isConsortiumAnalysis"         
+## [17] "isGenomewideNetwork"           "modelSystem"                  
+## [19] "modelSystemNameCommon"         "mouseModel"                   
+## [21] "normalizationType"             "organism"                     
+## [23] "other"                         "read"                         
+## [25] "specimenIdColumn"              "studyName"                    
+## [27] "summaryLevel"                  "tissueOfOrigin"               
+## [29] "tissueType"                    "tissueTypeAbrv"               
+## [31] "transcriptNormalizationMethod"
+```
+
+---
+
+# Some other issues
+
+* Invalid annotation values
+
+
+
+Too many to show them all, but there are invalid values for 
+24 annotations.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

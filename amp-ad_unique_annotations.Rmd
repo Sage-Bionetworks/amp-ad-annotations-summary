@@ -116,6 +116,36 @@ datatable(
 )
 ```
 
+---
 
+# Some other issues
 
+- Inconsistent annotation values, e.g. spaces at the end:
 
+```{r inconsistent-study-names, echo = FALSE}
+grep("\\s$", unique(dat$study), value = TRUE)
+```
+
+---
+
+# Some other issues
+
+* Invalid annotation keys
+
+```{r invalid-keys, echo = FALSE}
+library("dccvalidator")
+check_annotation_keys(select(dat, !!annot_cols))
+```
+
+---
+
+# Some other issues
+
+* Invalid annotation values
+
+```{r invalid-values, echo = FALSE}
+invalid_values <- check_annotation_values(dat)
+```
+
+Too many to show them all, but there are invalid values for 
+`r length(invalid_values)` annotations.
