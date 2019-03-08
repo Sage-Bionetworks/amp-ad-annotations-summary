@@ -15,6 +15,7 @@ output:
 options(htmltools.dir.version = FALSE)
 library("synapser")
 library("tidyverse")
+library("DT")
 synLogin()
 ```
 
@@ -104,8 +105,10 @@ reprocess_grouped_files <- reprocess_duplicated_annots %>%
     }
   ) %>%
   select(n, files)
+```
 
-DT::datatable(
+```{r show-table-reprocess, echo = FALSE, cache = TRUE}
+datatable(
   reprocess_grouped_files,
   fillContainer = FALSE,
   rownames = FALSE,
