@@ -92,6 +92,42 @@ are uniquely annotated.
 
 ---
 
+# Which files share annotations? 
+
+```{r distinct-annotation-groups-count, echo = FALSE}
+
+dat_dist_count <- dat_except_ad_cross %>%
+  group_by_at(annot_cols) %>%
+  summarize(
+    n = n(),
+    synIDs = list(id),
+    parents = list(unique(parentId))
+  ) %>%
+  arrange(desc(n))
+
+```
+
+```{r plot-distinct-annotation-groups-count, echo = FALSE, dev = "svg", fig.height = 4.5}
+ggplot(dat_dist_count, aes(x = n)) +
+  geom_histogram(bins = 20) +
+  scale_x_log10() +
+  labs(
+    x = "Number of files",
+    y = "Count",
+    title = "Counts of files sharing the same set of annotations"
+  )
+```
+
+---
+
+# Which files share annotations? 
+
+```{r distinct-annotation-groups-table, echo = FALSE}
+head(dat_dist_count[, c("n", "synIDs", "parents")])
+```
+
+---
+
 # RNA Seq Reprocessing
 
 ```{r reprocess, echo = FALSE, results = "hide", message = FALSE, cache = TRUE}
