@@ -17,6 +17,9 @@ library("synapser")
 library("tidyverse")
 library("DT")
 synLogin()
+
+## ggplot2 theme
+theme_set(theme_grey(base_size = 14))
 ```
 
 # Unique annotations in AMP-AD
