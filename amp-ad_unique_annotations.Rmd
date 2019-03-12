@@ -126,7 +126,39 @@ ggplot(dat_dist_count, aes(x = n)) +
 # Which files share annotations? 
 
 ```{r distinct-annotation-groups-table, echo = FALSE}
-head(dat_dist_count[, c("n", "synIDs", "parents")])
+## Show table of number of files with same annotations, preview of files'
+## synIDs, and preview (and count) of parent IDs of files
+dat_dist_count %>%
+  ungroup() %>%
+  select(n, synIDs, parents) %>%
+  filter(n > 1) %>%
+  pmap_dfr(
+    function(synIDs, parents, ...) {
+      collapsed_ids <- paste(synIDs, collapse = ", ")
+      if (nchar(collapsed_ids) > 20) {
+        collapsed_ids <- strtrim(collapsed_ids, 20)
+        collapsed_ids <- paste0(collapsed_ids, "...")
+      }
+      collapsed_parents <- paste0(
+        "[",
+        length(parents),
+        "] ",
+        paste(parents, collapse = ", ")
+      )
+      if (nchar(collapsed_parents) > 20) {
+        collapsed_parents <- strtrim(collapsed_parents, 20)
+        collapsed_parents <- paste0(collapsed_parents, "...")
+      }
+      bind_cols(
+        ...,
+        tibble(
+          files = collapsed_ids,
+          parents = collapsed_parents
+        )
+      )
+    }
+  ) %>%
+  datatable(options = list(pageLength = 8))
 ```
 
 ---
