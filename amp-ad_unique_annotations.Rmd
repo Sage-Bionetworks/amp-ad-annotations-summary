@@ -115,7 +115,7 @@ ggplot(dat_dist_count, aes(x = n)) +
   geom_histogram(bins = 40) +
   scale_x_log10() +
   labs(
-    x = "Number of files",
+    x = "Number of files with same annotations",
     y = "Count",
     title = "Counts of files sharing the same set of annotations"
   )
