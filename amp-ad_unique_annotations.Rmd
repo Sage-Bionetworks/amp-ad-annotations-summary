@@ -16,6 +16,7 @@ options(htmltools.dir.version = FALSE)
 library("synapser")
 library("tidyverse")
 library("DT")
+library("stringr")
 synLogin()
 
 ## ggplot2 theme
@@ -159,6 +160,45 @@ dat_dist_count %>%
     }
   ) %>%
   datatable(options = list(pageLength = 8))
+```
+
+---
+
+# HBTRC/Genomic Variants/Imputed/  has the most repeated annotations
+
+```{r show-hbtrc, echo = FALSE}
+dat_hbtrc <- dat_except_ad_cross %>%
+  filter(parentId == "syn3981980") %>%
+  group_by_at(annot_cols) %>%
+  summarize(n = n()) %>%
+  ungroup() %>%
+  mutate(id = row_number()) %>%
+  gather(key, value, -n, -id) %>%
+  filter(!is.na(value)) %>%
+  arrange(key, value) %>%
+  group_by(id) %>%
+  summarize(
+    annotations = paste(paste(key, value, sep = ": "), collapse = ", "),
+    n = unique(n)
+  ) %>%
+  select(n, annotations) %>%
+  ## Call attention to certain parts
+  mutate(
+    annotations = str_replace(
+      annotations,
+      "fileFormat: (txt|tsv)",
+      "<b>fileFormat: \\1</b>"
+    )
+  ) %>%
+  mutate(
+    annotations = str_replace(
+      annotations,
+      "IlluminaHumanHap650Y,Perlegen300Karray",
+      "<span style=\"color:red\">IlluminaHumanHap650Y,Perlegen300Karray</span>"
+    )
+  )
+
+datatable(dat_hbtrc, escape = FALSE, rownames = FALSE)
 ```
 
 ---
