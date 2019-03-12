@@ -96,9 +96,59 @@ are uniquely annotated.
 
 ---
 
+# RNA Seq Reprocessing
+
+```{r reprocess, echo = FALSE, results = "hide", message = FALSE, cache = TRUE}
+reprocess <- dat %>%
+  filter(study %in% c("rnaSeqReprocessing", "rnaSeqReprocessing "))
+
+n_files_reprocess <- nrow(reprocess)
+n_unique_reprocess <- reprocess %>%
+  select(!!annot_cols) %>%
+  distinct() %>%
+  nrow()
+```
+
+The RNA Seq reprocessing study has `r n_files_reprocess` files with 
+`r n_unique_reprocess` unique annotation combinations. Below are the groups of
+files with repeated annotations:
+
+```{r reprocess-duplicated, echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE}
+reprocess_duplicated_annots <- reprocess %>%
+  group_by_at(annot_cols) %>%
+  summarize(n = n(), synIDs = list(id)) %>%
+  filter(n > 1) %>%
+  arrange(desc(n))
+
+reprocess_grouped_files <- reprocess_duplicated_annots %>%
+  ungroup() %>%
+  pmap_dfr( 
+    function(synIDs, ...) {
+      filenames <- map_chr(synIDs, function(y) {
+        file <- synGet(y, downloadFile = FALSE)
+        file$properties$name
+      })
+      filenames <- paste(filenames, collapse = ", ")
+      bind_cols(..., tibble(files = filenames))
+    }
+  ) %>%
+  select(n, files)
+```
+
+```{r show-table-reprocess, echo = FALSE, cache = TRUE}
+datatable(
+  reprocess_grouped_files,
+  fillContainer = FALSE,
+  rownames = FALSE,
+  options = list(pageLength = 3)
+)
+```
+
+---
+
 # Which files share annotations? 
 
-```{r distinct-annotation-groups-count, echo = FALSE}
+```{r distinct-annotation-groups-count, echo = FALSE, cache = TRUE}
 
 dat_dist_count <- dat_except_ad_cross %>%
   group_by_at(annot_cols) %>%
@@ -118,7 +168,7 @@ ggplot(dat_dist_count, aes(x = n)) +
   labs(
     x = "Number of files with same annotations",
     y = "Count",
-    title = "Counts of files sharing the same set of annotations"
+    title = "Counts of files sharing the same set of\nannotations across public AMP-AD studies"
   )
 ```
 
@@ -199,56 +249,6 @@ dat_hbtrc <- dat_except_ad_cross %>%
   )
 
 datatable(dat_hbtrc, escape = FALSE, rownames = FALSE)
-```
-
----
-
-# RNA Seq Reprocessing
-
-```{r reprocess, echo = FALSE, results = "hide", message = FALSE, cache = TRUE}
-reprocess <- dat %>%
-  filter(study %in% c("rnaSeqReprocessing", "rnaSeqReprocessing "))
-
-n_files_reprocess <- nrow(reprocess)
-n_unique_reprocess <- reprocess %>%
-  select(!!annot_cols) %>%
-  distinct() %>%
-  nrow()
-```
-
-The RNA Seq reprocessing study has `r n_files_reprocess` files with 
-`r n_unique_reprocess` unique annotation combinations. Below are the groups of
-files with repeated annotations:
-
-```{r reprocess-duplicated, echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE}
-reprocess_duplicated_annots <- reprocess %>%
-  group_by_at(annot_cols) %>%
-  summarize(n = n(), synIDs = list(id)) %>%
-  filter(n > 1) %>%
-  arrange(desc(n))
-
-reprocess_grouped_files <- reprocess_duplicated_annots %>%
-  ungroup() %>%
-  pmap_dfr( 
-    function(synIDs, ...) {
-      filenames <- map_chr(synIDs, function(y) {
-        file <- synGet(y, downloadFile = FALSE)
-        file$properties$name
-      })
-      filenames <- paste(filenames, collapse = ", ")
-      bind_cols(..., tibble(files = filenames))
-    }
-  ) %>%
-  select(n, files)
-```
-
-```{r show-table-reprocess, echo = FALSE, cache = TRUE}
-datatable(
-  reprocess_grouped_files,
-  fillContainer = FALSE,
-  rownames = FALSE,
-  options = list(pageLength = 3)
-)
 ```
 
 ---
